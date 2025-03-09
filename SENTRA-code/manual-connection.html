@@ -32,7 +32,7 @@
   </div>
 
   <script type="module">
-   import { auth, db, collection, setDoc, onAuthStateChanged } from './firebase-config.js';
+   import { auth, db, doc, setDoc, onAuthStateChanged, serverTimestamp } from './firebase-config.js';
 
    onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -43,13 +43,17 @@
       const deviceType = document.getElementById('device-type').value;
       const ipAddress = document.getElementById('ip-address').value;
 
+      // إنشاء معرّف فريد للمستند
+      const deviceId = `device_${user.uid}_${new Date().getTime()}`;
+
       try {
-       await setDoc(collection(db, 'devices'), {
-        user_id: user.uid,
+       await setDoc(doc(db, 'devices', deviceId), {
+        user_id: user.uid, // ربط الجهاز بالمستخدم
         device_name: deviceName,
         device_type: deviceType,
         ip_address: ipAddress,
         status: 'Connected',
+        created_at: serverTimestamp(), // إضافة طابع زمني
        });
        alert('Device added successfully!');
        window.location.href = 'service.html';
