@@ -1,154 +1,65 @@
+
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1.0" />
-		<title>Service - SENTRA</title>
-		<link
-			rel="stylesheet"
-			href="styles.css" />
-		<style>
-			/* Additional styles for the manual connection page */
-			.manual-connection-box {
-				background-color: rgba(255, 255, 255, 0.1);
-				padding: 20px;
-				border-radius: 10px;
-				margin-top: 20px;
-				max-width: 500px;
-				margin-left: auto;
-				margin-right: auto;
-			}
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Service - SENTRA</title>
+  <link rel="stylesheet" href="styles.css" />
+ </head>
+ <body class="service-page">
+  <div class="navbar">
+   <div class="icon">
+    <img src="logo.png" alt="Logo" class="logo" />
+   </div>
+   <div class="menu">
+    <ul>
+     <li><a href="index.html">HOME</a></li>
+     <li><a href="service.html">SERVICE</a></li>
+     <li><a href="coming-soon.html">CONTACT</a></li>
+     <li><button id="logout-btn" class="logout-btn">LOGOUT</button></li>
+    </ul>
+   </div>
+  </div>
 
-			.manual-connection-box h2 {
-				color: #ff7200;
-				text-align: center;
-				margin-bottom: 20px;
-			}
+  <div class="service-box">
+   <h2>Scan Your Devices</h2>
+   <p id="user-welcome">Welcome, <span id="username">User</span>!</p>
+   <div class="options">
+    <a href="manual-connection.html" class="option-btn">Manual Connection</a>
+    <a href="coming-soon.html" class="option-btn">Automatic Connection</a>
+   </div>
+  </div>
 
-			.manual-connection-box input {
-				display: block;
-				width: 100%;
-				padding: 10px;
-				margin-bottom: 15px;
-				border-radius: 5px;
-				border: none;
-				background-color: rgba(255, 255, 255, 0.2);
-				color: white;
-			}
+  <script type="module">
+   import { auth, db, onAuthStateChanged, signOut, doc, getDoc } from './firebase-config.js';
 
-			.manual-connection-box input::placeholder {
-				color: rgba(255, 255, 255, 0.7);
-			}
+   onAuthStateChanged(auth, function (user) {
+    if (user) {
+     getDoc(doc(db, 'users', user.uid))
+      .then((docSnapshot) => {
+       if (docSnapshot.exists()) {
+        const userData = docSnapshot.data();
+        document.getElementById('username').textContent = userData.username || 'User';
+       }
+      })
+      .catch((error) => {
+       console.error('Error getting user data: ', error);
+      });
+    } else {
+     window.location.href = 'index.html';
+    }
+   });
 
-			.manual-connection-box button {
-				background-color: #ff7200;
-				color: white;
-				padding: 10px 20px;
-				border: none;
-				border-radius: 5px;
-				cursor: pointer;
-				width: 100%;
-				font-size: 16px;
-				transition: 0.4s ease;
-			}
-
-			.manual-connection-box button:hover {
-				background-color: white;
-				color: #ff7200;
-			}
-		</style>
-	</head>
-	<body class="service-page">
-		<!-- SENTRA logo in the top corner -->
-		<div class="navbar">
-			<div class="icon">
-				<img
-					src="https://github.com/Zahra-2/SENTRA/blob/main/logo.png?raw=true"
-					alt="Logo"
-					class="logo" />
-			</div>
-			<div class="menu">
-				<ul>
-					<li><a href="index.html">HOME</a></li>
-					<li><a href="service.html">SERVICE</a></li>
-					<li><a href="coming-soon.html">CONTACT</a></li>
-					<li>
-						<button
-							id="logout-btn"
-							class="logout-btn">
-							LOGOUT
-						</button>
-					</li>
-				</ul>
-			</div>
-		</div>
-
-		<!-- Service box -->
-		<div class="service-box">
-			<h2>Scan Your Devices</h2>
-			<p id="user-welcome">Welcome, <span id="username">User</span>!</p>
-			<div class="options">
-				<a
-					href="manual-connection.html"
-					class="option-btn"
-					>Manual Connection</a
-				>
-				<a
-					href="coming-soon.html"
-					class="option-btn"
-					>Automatic Connection</a
-				>
-			</div>
-		</div>
-
-		<script type="module">
-			// Import Firebase functions from our config file
-			import {
-				auth,
-				db,
-				onAuthStateChanged,
-				signOut,
-				doc,
-				getDoc,
-			} from './firebase-config.js';
-
-			// Check if user is logged in
-			onAuthStateChanged(auth, function (user) {
-				if (user) {
-					// User is signed in
-					getDoc(doc(db, 'users', user.uid))
-						.then((docSnapshot) => {
-							if (docSnapshot.exists()) {
-								const userData = docSnapshot.data();
-								document.getElementById('username').textContent =
-									userData.username || 'User';
-							}
-						})
-						.catch((error) => {
-							console.error('Error getting user data: ', error);
-						});
-				} else {
-					// No user is signed in, redirect to login page
-					window.location.href = 'index.html';
-				}
-			});
-
-			// Handle logout
-			document
-				.getElementById('logout-btn')
-				.addEventListener('click', function () {
-					signOut(auth)
-						.then(() => {
-							// Sign-out successful
-							window.location.href = 'index.html';
-						})
-						.catch((error) => {
-							// An error happened
-							console.error('Error signing out: ', error);
-						});
-				});
-		</script>
-	</body>
+   document.getElementById('logout-btn').addEventListener('click', function () {
+    signOut(auth)
+     .then(() => {
+      window.location.href = 'index.html';
+     })
+     .catch((error) => {
+      console.error('Error signing out: ', error);
+     });
+   });
+  </script>
+ </body>
 </html>
