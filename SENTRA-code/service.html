@@ -9,11 +9,59 @@
 		<link
 			rel="stylesheet"
 			href="styles.css" />
+		<style>
+			/* Additional styles for the manual connection page */
+			.manual-connection-box {
+				background-color: rgba(255, 255, 255, 0.1);
+				padding: 20px;
+				border-radius: 10px;
+				margin-top: 20px;
+				max-width: 500px;
+				margin-left: auto;
+				margin-right: auto;
+			}
 
-		<!-- Remove Firebase SDK script tags as we'll import them as modules -->
+			.manual-connection-box h2 {
+				color: #ff7200;
+				text-align: center;
+				margin-bottom: 20px;
+			}
+
+			.manual-connection-box input {
+				display: block;
+				width: 100%;
+				padding: 10px;
+				margin-bottom: 15px;
+				border-radius: 5px;
+				border: none;
+				background-color: rgba(255, 255, 255, 0.2);
+				color: white;
+			}
+
+			.manual-connection-box input::placeholder {
+				color: rgba(255, 255, 255, 0.7);
+			}
+
+			.manual-connection-box button {
+				background-color: #ff7200;
+				color: white;
+				padding: 10px 20px;
+				border: none;
+				border-radius: 5px;
+				cursor: pointer;
+				width: 100%;
+				font-size: 16px;
+				transition: 0.4s ease;
+			}
+
+			.manual-connection-box button:hover {
+				background-color: white;
+				color: #ff7200;
+			}
+		</style>
 	</head>
 	<body class="service-page">
-		<!-- شعار SENTRA في الزاوية العلوية -->
+		<!-- SENTRA logo in the top corner -->
 		<div class="navbar">
 			<div class="icon">
 				<img
@@ -37,13 +85,13 @@
 			</div>
 		</div>
 
-		<!-- مربع الخدمة -->
+		<!-- Service box -->
 		<div class="service-box">
 			<h2>Scan Your Devices</h2>
 			<p id="user-welcome">Welcome, <span id="username">User</span>!</p>
 			<div class="options">
 				<a
-					href="coming-soon.html"
+					href="manual-connection.html"
 					class="option-btn"
 					>Manual Connection</a
 				>
