@@ -1,99 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
- <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Service - SENTRA</title>
-  <link rel="stylesheet" href="styles.css" />
- </head>
- <body class="service-page">
-  <div class="navbar">
-   <div class="icon">
-    <img src="logo.png" alt="Logo" class="logo" />
-   </div>
-   <div class="menu">
-    <ul>
-     <li><a href="index.html">HOME</a></li>
-     <li><a href="service.html">SERVICE</a></li>
-     <li><a href="coming-soon.html">CONTACT</a></li>
-     <li><button id="logout-btn" class="logout-btn">LOGOUT</button></li>
-    </ul>
-   </div>
-  </div>
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0" />
+		<title>Service - SENTRA</title>
+		<link
+			rel="stylesheet"
+			href="styles.css" />
+		<style>
+			/* Additional styles for the manual connection page */
+			.manual-connection-box {
+				background-color: rgba(255, 255, 255, 0.1);
+				padding: 20px;
+				border-radius: 10px;
+				margin-top: 20px;
+				max-width: 500px;
+				margin-left: auto;
+				margin-right: auto;
+			}
 
-  <div class="service-box">
-   <h2>Scan Your Devices</h2>
-   <p id="user-welcome">Welcome, <span id="username">User</span>!</p>
-   <div class="options">
-    <a href="manual-connection.html" class="option-btn">Manual Connection</a>
-    <a href="coming-soon.html" class="option-btn">Automatic Connection</a>
-   </div>
+			.manual-connection-box h2 {
+				color: #ff7200;
+				text-align: center;
+				margin-bottom: 20px;
+			}
 
-   <!-- Add Device Form -->
-   <div class="manual-connection-box">
-    <h3>Add Device</h3>
-    <form id="add-device-form">
-     <input type="text" id="device-name" placeholder="Device Name" required />
-     <input type="text" id="device-type" placeholder="Device Type" required />
-     <input type="text" id="ip-address" placeholder="IP Address" required />
-     <button type="submit">Add Device</button>
-    </form>
-   </div>
-  </div>
+			.manual-connection-box input {
+				display: block;
+				width: 100%;
+				padding: 10px;
+				margin-bottom: 15px;
+				border-radius: 5px;
+				border: none;
+				background-color: rgba(255, 255, 255, 0.2);
+				color: white;
+			}
 
-  <script type="module">
-   import { auth, db, onAuthStateChanged, signOut, doc, getDoc, collection, addDoc } from './firebase-config.js';
+			.manual-connection-box input::placeholder {
+				color: rgba(255, 255, 255, 0.7);
+			}
+
+			.manual-connection-box button {
+				background-color: #ff7200;
+				color: white;
+				padding: 10px 20px;
+				border: none;
+				border-radius: 5px;
+				cursor: pointer;
+				width: 100%;
+				font-size: 16px;
+				transition: 0.4s ease;
+			}
+
+			.manual-connection-box button:hover {
+				background-color: white;
+				color: #ff7200;
+			}
+		</style>
+	</head>
+	<body class="service-page">
+		<!-- SENTRA logo in the top corner -->
+		<div class="navbar">
+			<div class="icon">
+				<img
+					src="https://github.com/Zahra-2/SENTRA/blob/main/logo.png?raw=true"
+					alt="Logo"
+					class="logo" />
+			</div>
+			<div class="menu">
+				<ul>
+					<li><a href="index.html">HOME</a></li>
+					<li><a href="service.html">SERVICE</a></li>
+					<li><a href="coming-soon.html">CONTACT</a></li>
+					<li>
+						<button
+							id="logout-btn"
+							class="logout-btn">
+							LOGOUT
+						</button>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<!-- Service box -->
+		<div class="service-box">
+			<h2>Scan Your Devices</h2>
+			<p id="user-welcome">Welcome, <span id="username">User</span>!</p>
+			<div class="options">
+				<a
+					href="manual-connection.html"
+					class="option-btn"
+					>Manual Connection</a
+				>
+				<a
+					href="coming-soon.html"
+					class="option-btn"
+					>Automatic Connection</a
+				>
+			</div>
+		</div>
+
+		<script type="module">
+   import { auth, db, onAuthStateChanged, signOut, doc, getDoc, setDoc } from './firebase-config.js';
 
    onAuthStateChanged(auth, function (user) {
-    if (user) {
-     getDoc(doc(db, 'users', user.uid))
-      .then((docSnapshot) => {
-       if (docSnapshot.exists()) {
-        const userData = docSnapshot.data();
-        document.getElementById('username').textContent = userData.username || 'User';
+       if (user) {
+           getDoc(doc(db, 'users', user.uid))
+               .then((docSnapshot) => {
+                   if (docSnapshot.exists()) {
+                       const userData = docSnapshot.data();
+                       document.getElementById('username').textContent = userData.username || 'User';
+                   }
+               })
+               .catch((error) => {
+                   console.error('Error getting user data: ', error);
+               });
+       } else {
+           window.location.href = 'index.html';
        }
-      })
-      .catch((error) => {
-       console.error('Error getting user data: ', error);
-      });
-
-     // Add device to Firestore
-     document.getElementById('add-device-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const deviceName = document.getElementById('device-name').value;
-      const deviceType = document.getElementById('device-type').value;
-      const ipAddress = document.getElementById('ip-address').value;
-
-      try {
-       await addDoc(collection(db, 'devices'), {
-        user_id: user.uid,
-        device_name: deviceName,
-        device_type: deviceType,
-        ip_address: ipAddress,
-        status: 'Connected',
-       });
-       alert('Device added successfully!');
-      } catch (error) {
-       console.error('Error adding device: ', error);
-       alert('Failed to add device.');
-      }
-     });
-
-    } else {
-     window.location.href = 'index.html';
-    }
    });
 
    document.getElementById('logout-btn').addEventListener('click', function () {
-    signOut(auth)
-     .then(() => {
-      window.location.href = 'index.html';
-     })
-     .catch((error) => {
-      console.error('Error signing out: ', error);
-     });
+       signOut(auth)
+           .then(() => {
+               window.location.href = 'index.html';
+           })
+           .catch((error) => {
+               console.error('Error signing out: ', error);
+           });
    });
-  </script>
- </body>
+</script>
+	</body>
 </html>
