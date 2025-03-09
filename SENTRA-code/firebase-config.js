@@ -52,6 +52,7 @@ export {
 	collection,
 	doc,
 	setDoc,
+	addDoc,
 	getDoc,
 	updateDoc,
 	serverTimestamp,
