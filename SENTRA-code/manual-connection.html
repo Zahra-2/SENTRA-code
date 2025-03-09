@@ -32,7 +32,7 @@
   </div>
 
   <script type="module">
-   import { auth, db, collection, setDoc, addDoc, onAuthStateChanged } from './firebase-config.js';
+   import { auth, db, collection, setDoc, onAuthStateChanged } from './firebase-config.js';
 
    onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -44,7 +44,7 @@
       const ipAddress = document.getElementById('ip-address').value;
 
       try {
-       await addDoc(collection(db, 'devices'), {
+       await setDoc(collection(db, 'devices'), {
         user_id: user.uid,
         device_name: deviceName,
         device_type: deviceType,
